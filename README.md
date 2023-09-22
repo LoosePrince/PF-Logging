@@ -2,7 +2,7 @@
 > MCDR日志记录插件
 
 [![页面浏览量计数](https://badges.toozhao.com/badges/01HA948ZWH9JWY2DVPHEXXRD0E/green.svg)](/)
-[![查看次数起始时间](https://img.shields.io/badge/查看次数统计起始于-2023/9/-1?style=flat-square)](/)
+[![查看次数起始时间](https://img.shields.io/badge/查看次数统计起始于-2023/9/14-1?style=flat-square)](/)
 [![仓库大小](https://img.shields.io/github/repo-size/LoosePrince/PF-Logging?style=flat-square&label=仓库占用)](/)
 [![最新版](https://img.shields.io/github/v/release/LoosePrince/PF-Logging?style=flat-square&label=最新版)](https://github.com/LoosePrince/PF-Logging/releases/latest/download/Logging.mcdr)
 [![Issues](https://img.shields.io/github/issues/LoosePrince/PF-Logging?style=flat-square&label=Issues)](https://github.com/LoosePrince/PF-Logging/issues)

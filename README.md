@@ -18,7 +18,7 @@
 [![Issues](https://img.shields.io/github/issues/LoosePrince/PF-Logging?style=flat-square&label=Issues)](https://github.com/LoosePrince/PF-Logging/issues)
 [![已关闭issues](https://img.shields.io/github/issues-closed/LoosePrince/PF-Logging?style=flat-square&label=已关闭%20Issues)](https://github.com/LoosePrince/PF-Logging/issues?q=is%3Aissue+is%3Aclosed)
 [![下载量](https://img.shields.io/github/downloads/LoosePrince/PF-Logging/total?style=flat-square&label=下载量)](https://github.com/LoosePrince/PF-Logging/releases)
-[![最新发布下载量](https://img.shields.io/github/downloads/LoosePrince/PF-Logging/latest/total?style=flat-square&label=最新版本下载量)](https://github.com/LoosePrince/PF-Logging/releases/latest)
+[![最新发布下载量](https://img.shields.io/github/downloads/LoosePrince/PF-Logging/latest/total?style=flat-square&label=最新版本下载量)](https://github.com/LoosePrince/PF-Logging/releases/latest) 
 
 ## 插件功能
 
@@ -26,7 +26,7 @@
 - **日志查询**：支持通过API和游戏内命令查询日志内容及其上下文。
 - **命令执行与反馈**：允许通过API执行Minecraft命令并获取执行结果。
 - **配置灵活**：提供配置文件，允许自定义日志记录的级别、长度等参数。
-- **游戏内命令支持**：允许管理员在游戏内使用`#log`命令查询日志。
+- **游戏内命令支持**：允许管理员在游戏内使用`!log`和`!log_id`命令查询日志。
 
 ### 使用方法
 

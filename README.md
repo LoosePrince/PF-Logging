@@ -31,8 +31,10 @@
 ### 使用方法
 
 - **游戏内命令**：
-  - `#log`：显示最近的日志条目。
-  - `#log <log_id>`：根据日志编号查询特定的日志内容。
+  - `!log`：显示最近的日志条目。
+  - ![image](https://github.com/user-attachments/assets/c49af5f1-eca9-4b97-9f4a-596fb33986fa) 
+  - `#log_id <log_id>`：根据日志编号查询特定的日志内容。
+  - ![image](https://github.com/user-attachments/assets/d7795fa6-a722-46d4-b211-7cf547f245fb)
 
 ## 安装教程
 

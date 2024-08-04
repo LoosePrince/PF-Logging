@@ -7,7 +7,7 @@ Player Control 插件允许拥有权限的玩家在 Minecraft 服务端上召唤
 ### 安装方法
 
 1. 下载 `player_control.py` 文件并将其放入 MCDR 的 `plugins` 目录中。
-2. 启动或重启 MCDR 服务端。
+2. 启动服务器或 `!!MCDR plugin load` 加载插件即可。
 
 ### 配置文件
 
@@ -68,4 +68,4 @@ Player Control 插件允许拥有权限的玩家在 Minecraft 服务端上召唤
 
 ### 卸载插件
 
-要卸载插件，只需从 `plugins` 目录中删除 `player_control.py` 文件，并重启 MCDR 服务端即可。
+要卸载插件，只需 `!!MCDR plugin unload` 直接卸载即可。

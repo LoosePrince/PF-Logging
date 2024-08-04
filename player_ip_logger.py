@@ -75,18 +75,18 @@ def extract_player_info(content: str):
                     player_name = content[:content.find('[')].strip()
                     return player_name, player_ip
 
-        # 处理格式: Disconnecting Shusao (/127.0.0.1:25567)
-        if "Disconnecting" in content or "lost connection" in content:
-            start_index = content.find('(/') + 2
-            end_index = content.find(')', start_index)
-            if start_index != -1 and end_index != -1:
-                ip_info = content[start_index:end_index]
-                player_ip = ip_info.split(':')[0]
-                # 确定玩家名称从 "Disconnecting " 到 " (/" 之间的部分
-                player_name_start = content.find('Disconnecting ') + len('Disconnecting ')
-                player_name_end = content.find(' (/', player_name_start)
-                player_name = content[player_name_start:player_name_end].strip()
-                return player_name, player_ip
+        # # 处理格式: Disconnecting Shusao (/127.0.0.1:25567)
+        # if "Disconnecting" in content or "lost connection" in content:
+        #     start_index = content.find('(/') + 2
+        #     end_index = content.find(')', start_index)
+        #     if start_index != -1 and end_index != -1:
+        #         ip_info = content[start_index:end_index]
+        #         player_ip = ip_info.split(':')[0]
+        #         # 确定玩家名称从 "Disconnecting " 到 " (/" 之间的部分
+        #         player_name_start = content.find('Disconnecting ') + len('Disconnecting ')
+        #         player_name_end = content.find(' (/', player_name_start)
+        #         player_name = content[player_name_start:player_name_end].strip()
+        #         return player_name, player_ip
 
         # # 处理格式: Shusao (/127.0.0.1:25567) lost connection
         # # 有问题，以后再说

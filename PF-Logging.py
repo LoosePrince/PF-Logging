@@ -80,16 +80,16 @@ def on_info(server: PluginServerInterface, info: Info):
     log_counter += 1
 
     # 检查消息内容是否为查询命令
-    if info.content.startswith('!log'):
+    if info.content.startswith('!!log'):
         handle_query_log_command(server, info)
 
 def handle_query_log_command(server: PluginServerInterface, info: Info):
     parts = info.content.split()
     command = parts[0]
 
-    if command == '!log':
+    if command == '!!log':
         query_log(server, info)
-    elif command == '!log_id' and len(parts) > 1:
+    elif command == '!!log_id' and len(parts) > 1:
         try:
             log_id = int(parts[1])
             query_log_by_id(server, info, log_id)
@@ -114,9 +114,9 @@ def query_log(server: PluginServerInterface, source: Info):
     server.execute(f'tellraw {source.player} {json.dumps(title_message)}')
 
     # 发送日志内容
-    for log in log_storage[-10:]:
+    for log in log_storage[-40:]:
         log_message = {
-            "text": f"[{log['time']}] !!{log['id']}: {log['content']}",
+            "text": f"[{log['time']}] {log['id']}: {log['content']}",
             "clickEvent": {
                 "action": "copy_to_clipboard",
                 "value": f"{log['content']}"
@@ -145,7 +145,7 @@ def query_log_by_id(server: PluginServerInterface, source: Info, log_id: int):
     for log in log_storage:
         if log['id'] == log_id:
             log_message = {
-                "text": f"[{log['time']}] !!{log['id']}: {log['content']}",
+                "text": f"[{log['time']}] {log['id']}: {log['content']}",
                 "clickEvent": {
                     "action": "copy_to_clipboard",
                     "value": f"{log['content']}"

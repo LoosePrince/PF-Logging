@@ -55,6 +55,119 @@ def on_load(server: PluginServerInterface, prev_module):
             )
         )
         .then(
+            Literal('drop')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: drop_dummy(src, ctx))
+                .then(
+                    Literal('interval')
+                    .then(
+                        Text('time')
+                        .runs(lambda src, ctx: drop_dummy_with_interval(src, ctx))
+                    )
+                )
+                .then(
+                    Text('options')
+                    .runs(lambda src, ctx: drop_dummy_with_options(src, ctx))
+                )
+            )
+        )
+        .then(
+            Literal('dropstack')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: dropStack_dummy(src, ctx))
+                .then(
+                    Literal('interval')
+                    .then(
+                        Text('time')
+                        .runs(lambda src, ctx: dropStack_dummy_with_interval(src, ctx))
+                    )
+                )
+                .then(
+                    Text('option')
+                    .runs(lambda src, ctx: dropStack_dummy_with_options(src, ctx))
+                )
+            )
+        )
+        .then(
+            Literal('hotbar')
+            .then(
+                Text('id')
+                .then(
+                    Text('slot')
+                    .runs(lambda src, ctx: hotbar_dummy(src, ctx))
+                )
+            )
+        )
+        .then(
+            Literal('swapHands')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: swapHands_dummy(src, ctx))
+            )
+        )
+        .then(
+            Literal('turn')
+            .then(
+                Text('id')
+                .then(
+                    Literal('back')
+                    .runs(lambda src, ctx: turn_dummy(src, ctx))
+                )
+                .then(
+                    Text('left')
+                    .then(
+                        Text('right')
+                        .runs(lambda src, ctx: turn_dummy_with_direction(src, ctx))
+                    )
+                )
+            )
+        )
+        .then(
+            Literal('attack')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: attack_dummy(src, ctx))
+                .then(
+                    Literal('interval')
+                    .then(
+                        Text('time')
+                        .runs(lambda src, ctx: attack_dummy_with_interval(src, ctx))
+                    )
+                )
+                .then(
+                    Text('option')
+                    .runs(lambda src, ctx: attack_dummy_with_options(src, ctx))
+                )
+            )
+        )
+        .then(
+            Literal('use')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: use_dummy(src, ctx))
+                .then(
+                    Literal('interval')
+                    .then(
+                        Text('time')
+                        .runs(lambda src, ctx: use_dummy_with_interval(src, ctx))
+                    )
+                )
+                .then(
+                    Text('option')
+                    .runs(lambda src, ctx: use_dummy_with_options(src, ctx))
+                )
+            )
+        )
+        .then(
+            Literal('stop')
+            .then(
+                Text('id')
+                .runs(lambda src, ctx: stop_player(src, ctx))
+            )
+        )
+        .then(
             Literal('op')
             .then(
                 Text('player')
@@ -68,7 +181,7 @@ def on_load(server: PluginServerInterface, prev_module):
                 .runs(lambda src, ctx: deop_player(src, ctx))
             )
         )
-    )
+    )    
 
 def load_json(file_path):
     with open(file_path, 'r') as f:
@@ -90,6 +203,9 @@ def op_player(src, ctx):
             ops.append(player_id)
             save_json(op_file, ops)
             src.reply(f'{player_id} 已被赋予召唤假人权限')
+            command = f'/tellraw {player_id} "您已被授予假人权限"'
+            server = src.get_server()
+            server.execute(command)
         else:
             src.reply(f'{player_id} 已经拥有权限')
     else:
@@ -103,6 +219,9 @@ def deop_player(src, ctx):
             ops.remove(player_id)
             save_json(op_file, ops)
             src.reply(f'{player_id} 的召唤假人权限已被移除')
+            command = f'/tellraw {player_id} "您的假人权限已被移除"'
+            server = src.get_server()
+            server.execute(command)
         else:
             src.reply(f'{player_id} 不在权限列表中')
     else:
@@ -113,8 +232,10 @@ def spawn_dummy(src, ctx, coords):
     if is_player_op(src.player):
         x, y, z = coords
         command = f'/player {player_id} spawn at {x} {y} {z}'
+        gamemode_command = f'/gamemode survival {player_id}'
         server = src.get_server()
         server.execute(command)
+        server.execute(gamemode_command)
         src.reply(f'已在坐标 {x} {y} {z} 召唤假人 {player_id}')
 
         dummies = load_json(dummy_file)
@@ -132,8 +253,10 @@ def spawn_dummy_with_coords(src, ctx):
         y = ctx['y']
         z = ctx['z']
         command = f'/player {player_id} spawn at {x} {y} {z}'
+        gamemode_command = f'/gamemode survival {player_id}'
         server = src.get_server()
         server.execute(command)
+        server.execute(gamemode_command)
         src.reply(f'已在坐标 {x} {y} {z} 召唤假人 {player_id}')
 
         dummies = load_json(dummy_file)
@@ -149,7 +272,9 @@ def check_dummy_joined(server, player_id, log_line):
         summoner = waiting_for_join.pop(player_id, None)
         if summoner:
             tp_command = f'/tp {player_id} {summoner}'
+            gamemode_command = f'/gamemode survival {player_id}'
             server.execute(tp_command)
+            server.execute(gamemode_command)
             server.logger.info(f'假人 {player_id} 已传送到召唤者 {summoner}')
 
 def kill_dummy(src, ctx):
@@ -166,6 +291,187 @@ def kill_dummy(src, ctx):
             save_json(dummy_file, dummies)
     else:
         src.reply('你没有权限删除假人')
+
+def drop_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} drop'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def drop_dummy_with_options(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        option = ctx['option']
+        command = f'/player {player_id} drop {option}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+
+def drop_dummy_with_interval(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        time = ctx['time']
+        command = f'/player {player_id} drop interval {time}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def dropStack_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} dropStack'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def dropStack_dummy_with_options(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        option = ctx['option']
+        command = f'/player {player_id} dropStack {option}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def dropStack_dummy_with_interval(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        time = ctx['time']
+        command = f'/player {player_id} dropStack interval {time}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def hotbar_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        slot = ctx['slot']
+        command = f'/player {player_id} hotbar {slot}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def swapHands_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} swapHands'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def turn_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} turn back'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def turn_dummy_with_direction(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        left = ctx['left']
+        right = ctx['right']
+        command = f'/player {player_id} turn {left} {right}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+
+def attack_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} attack'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def attack_dummy_with_interval(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        time = ctx['time']
+        command = f'/player {player_id} attack interval {time}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def attack_dummy_with_options(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        option = ctx['option']
+        command = f'/player {player_id} attack {option}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def use_dummy(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} use'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def use_dummy_with_interval(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        interval = ctx['interval']
+        time = ctx['time']
+        command = f'/player {player_id} use {interval} {time}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def use_dummy_with_options(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        option = ctx['option']
+        command = f'/player {player_id} use {option}'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已执行')
+    else:
+        src.reply('你没有权限')
+
+def stop_player(src, ctx):
+    player_id = ctx['id'].lower()
+    if is_player_op(src.player):
+        command = f'/player {player_id} stop'
+        server = src.get_server()
+        server.execute(command)
+        src.reply(f'假人 {player_id} 已停止行为')
+    else:
+        src.reply('你没有权限')
 
 def on_info(server: PluginServerInterface, info: Info):
     for player_id in list(waiting_for_join):

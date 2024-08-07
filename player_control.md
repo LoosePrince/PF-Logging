@@ -41,10 +41,10 @@ Player Control 插件允许拥有权限的玩家在 Minecraft 服务端上召唤
 
 ```
 !!player drop <假人ID> <interval / 选项> <时间>
-!!player dropStack <假人ID> <interval / 选项> <时间>
+!!player dropstack <假人ID> <interval / 选项> <时间>
 ```
 
-> drop子命令一次只会丢出一个物品，而dropStack子命令则会一次丢出整组物品。
+> drop子命令一次只会丢出一个物品，而dropstack子命令则会一次丢出整组物品。
 
 - **假人 ID**：必须参数，指定要执行操作的假人的名称。
 - **interval <时间>**：可选参数，设置丢弃物品的时间间隔。
